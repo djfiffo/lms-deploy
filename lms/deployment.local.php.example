@@ -1,0 +1,9 @@
+<?php
+return [
+    'LMS_DB_HOST' => 'SET_FROM_BYETHOST_PANEL',
+    'LMS_DB_NAME' => 'SET_FROM_BYETHOST_PANEL',
+    'LMS_DB_USER' => 'SET_FROM_BYETHOST_PANEL',
+    'LMS_DB_PASS' => 'SET_A_NEW_DATABASE_PASSWORD',
+    'LMS_SERVICE_URL' => 'https://lms-ml-risk.onrender.com',
+    'LMS_SERVICE_API_KEY' => 'SET_THE_NEW_RENDER_API_KEY',
+];

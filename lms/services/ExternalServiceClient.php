@@ -64,15 +64,14 @@ final class HttpServiceClient implements ExternalServiceClient {
 function service_client() {
     static $client;
     if (!$client) {
-        // Use the local ML service by default; deployments can override this URL.
-        $baseUrl = getenv('LMS_SERVICE_URL') ?: 'http://127.0.0.1:8091';
+        $baseUrl = rtrim(lms_config_value('LMS_SERVICE_URL', 'https://lms-ml-risk.onrender.com'), '/');
         if ($baseUrl === '') {
             $client = new LocalServiceClient();
         } else {
             $client = new HttpServiceClient(
                 $baseUrl,
-                getenv('LMS_SERVICE_API_KEY') ?: '',
-                getenv('LMS_SERVICE_TIMEOUT') ?: 10
+                lms_config_value('LMS_SERVICE_API_KEY'),
+                lms_config_value('LMS_SERVICE_TIMEOUT', 10)
             );
         }
     }

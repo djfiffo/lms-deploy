@@ -1,12 +1,29 @@
 <?php
+$localConfigFile = __DIR__ . '/deployment.local.php';
+$localConfig = is_file($localConfigFile) ? require $localConfigFile : [];
+if (!is_array($localConfig)) {
+    http_response_code(503);
+    die("Deployment configuration is invalid.");
+}
+$GLOBALS['lms_deployment_config'] = $localConfig;
+
+function lms_config_value($name, $default = '') {
+    $value = getenv($name);
+    if ($value !== false && $value !== '') {
+        return $value;
+    }
+    $localConfig = $GLOBALS['lms_deployment_config'] ?? [];
+    return array_key_exists($name, $localConfig) ? $localConfig[$name] : $default;
+}
+
 require_once __DIR__ . '/services/ExternalServiceClient.php';
 
-$host = getenv('LMS_DB_HOST');
-$user = getenv('LMS_DB_USER');
-$pass = getenv('LMS_DB_PASS');
-$dbname = getenv('LMS_DB_NAME');
+$host = lms_config_value('LMS_DB_HOST');
+$user = lms_config_value('LMS_DB_USER');
+$pass = lms_config_value('LMS_DB_PASS');
+$dbname = lms_config_value('LMS_DB_NAME');
 
-if (!$host || !$user || $pass === false || $pass === '' || !$dbname) {
+if (!$host || !$user || !$pass || !$dbname) {
     http_response_code(503);
     die("Database configuration is incomplete.");
 }

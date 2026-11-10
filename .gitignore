@@ -13,3 +13,4 @@ __pycache__/
 lms/ml/data/
 lms/ml/test_mock_learning_events.csv
 lms/database/seed*.php
+lms/deployment.local.php
