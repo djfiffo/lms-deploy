@@ -22,16 +22,18 @@ if ($course_id && $unit_id) {
             . "วัตถุประสงค์: {$context_row['objectives']} รายละเอียด: {$context_row['description']}";
     }
 }
-$ai_url = getenv('LMS_CHATBOT_URL') ?: '';
-$ai_key = getenv('LMS_CHATBOT_API_KEY') ?: '';
+$ai_url = lms_config_value('LMS_CHATBOT_URL');
+$ai_key = lms_config_value('LMS_CHATBOT_API_KEY');
 $provider_error = '';
 if ($ai_url === '') {
-    $provider_error = 'ยังไม่ได้โหลดค่า LMS_CHATBOT_URL จาก Apache';
+    $provider_error = 'ยังไม่ได้ตั้งค่า LMS_CHATBOT_URL ใน deployment.local.php หรือ PHP environment';
 } elseif (!function_exists('curl_init')) {
     $provider_error = 'PHP ยังไม่ได้เปิดใช้งาน cURL';
+} elseif ($ai_key === '') {
+    $provider_error = 'ยังไม่ได้ตั้งค่า LMS_CHATBOT_API_KEY ใน deployment.local.php หรือ PHP environment';
 } else {
     $request = [
-        'model' => getenv('LMS_CHATBOT_MODEL') ?: 'gpt-4o-mini',
+        'model' => lms_config_value('LMS_CHATBOT_MODEL', 'gpt-4o-mini'),
         'messages' => [
             ['role' => 'system', 'content' => 'คุณเป็นผู้ช่วยสอน LMS ตอบภาษาไทย กระชับ อ้างอิงเฉพาะบริบทบทเรียน ห้ามแต่งคะแนนหรือเฉลยข้อสอบ' . $context],
             ['role' => 'user', 'content' => $message],
