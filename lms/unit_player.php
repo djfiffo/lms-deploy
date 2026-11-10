@@ -234,12 +234,19 @@ function sendChat() {
     let body = document.getElementById('chat-body');
     body.innerHTML += `<div class="chat-message user"><div class="chat-bubble"><span class="chat-label">คุณ</span>${escapeHtml(msg)}</div></div>`;
     
-    fetch('chatbot_api.php', {
+    fetch('assistant.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({message: msg, course_id: <?php echo (int)$unit['course_id']; ?>, unit_id: <?php echo (int)$unit_id; ?>})
     })
-    .then(res => res.json().then(data => ({ok: res.ok, data: data})))
+    .then(async res => {
+        const contentType = res.headers.get('content-type') || '';
+        const responseText = await res.text();
+        if (!contentType.includes('application/json')) {
+            throw new Error(`เซิร์ฟเวอร์ตอบ HTTP ${res.status} โดยไม่ได้ส่ง JSON`);
+        }
+        return {ok: res.ok, data: JSON.parse(responseText)};
+    })
     .then(data => {
         let reply = formatReply(data.data.reply || 'ไม่สามารถรับคำตอบได้ในขณะนี้');
         const safeReply = escapeHtml(reply);
@@ -251,8 +258,9 @@ function sendChat() {
         document.getElementById('chat-input').value = '';
         body.scrollTop = body.scrollHeight;
     })
-    .catch(() => {
-        body.innerHTML += '<div class="chat-message bot"><div class="chat-bubble text-danger"><span class="chat-label">ผู้ช่วย AI</span>เชื่อมต่อไม่ได้ กรุณาลองใหม่</div></div>';
+    .catch(error => {
+        const detail = error instanceof Error ? error.message : 'กรุณาลองใหม่';
+        body.innerHTML += `<div class="chat-message bot"><div class="chat-bubble text-danger"><span class="chat-label">ผู้ช่วย AI</span>เชื่อมต่อไม่ได้: ${escapeHtml(detail)}</div></div>`;
     });
 }
 function formatReply(value) {

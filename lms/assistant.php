@@ -1,5 +1,5 @@
 <?php
-require_once 'config.php';
+require_once __DIR__ . '/config.php';
 header('Content-Type: application/json; charset=utf-8');
 if (!isset($_SESSION['user_id'])) { http_response_code(401); echo json_encode(['reply' => 'กรุณาเข้าสู่ระบบก่อนใช้งาน'], JSON_UNESCAPED_UNICODE); exit(); }
 $payload = json_decode(file_get_contents('php://input'), true);
