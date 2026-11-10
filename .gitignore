@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+.venv/
+**/.venv/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.log
+*_backup*.sql
+*_before_*.sql
+*_dump*.sql
+lms/ml/data/
+lms/ml/test_mock_learning_events.csv
+lms/database/seed*.php

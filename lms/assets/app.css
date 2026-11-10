@@ -1,0 +1,151 @@
+/* Shared application surface. The global navbar remains owned by header.php. */
+.container.my-4 {
+    max-width: 1180px;
+    padding-top: .35rem;
+}
+
+.container.my-4 > h1,
+.container.my-4 > h2,
+.container.my-4 > h3,
+.container.my-4 > h4 {
+    color: #29415f;
+    font-weight: 600;
+    letter-spacing: -.01em;
+}
+
+.container.my-4 .text-primary {
+    color: #3f79c7 !important;
+}
+
+.container.my-4 .card,
+.container.my-4 .card-custom {
+    background: #fff;
+    border: 1px solid #e2ebf5;
+    border-radius: 14px;
+    box-shadow: 0 5px 16px rgba(41, 65, 95, .06);
+}
+
+.container.my-4 .card-header {
+    background: #f7fbff;
+    border-bottom: 1px solid #e2ebf5;
+    color: #29415f;
+    font-weight: 600;
+}
+
+.container.my-4 .card-footer {
+    border-top-color: #edf2f7;
+}
+
+.container.my-4 .btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+
+.container.my-4 .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(41, 65, 95, .12);
+}
+
+.container.my-4 .btn-light {
+    background: #f7fbff;
+    border-color: #dbe8f5;
+    color: #365676;
+}
+
+.container.my-4 .btn-outline-primary {
+    border-color: #7daee9;
+    color: #3f79c7;
+}
+
+.container.my-4 .form-control,
+.container.my-4 .form-select {
+    border-color: #d7e3ef;
+    border-radius: 8px;
+    min-height: 40px;
+}
+
+.container.my-4 .form-control:focus,
+.container.my-4 .form-select:focus {
+    border-color: #7eb6fe;
+    box-shadow: 0 0 0 .2rem rgba(126, 182, 254, .2);
+}
+
+.container.my-4 .form-label {
+    color: #365676;
+    font-weight: 600;
+    margin-bottom: .35rem;
+}
+
+.container.my-4 .table {
+    --bs-table-striped-bg: #f8fbff;
+    border-color: #e1eaf3;
+    overflow: hidden;
+}
+
+.container.my-4 .table thead th {
+    background: #edf5ff;
+    border-bottom: 2px solid #d7e6f5;
+    color: #365676;
+    font-size: .9rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.container.my-4 .table tbody tr:hover {
+    background: #f4f9ff;
+}
+
+.container.my-4 .badge {
+    border-radius: 6px;
+    font-weight: 500;
+    padding: .42em .62em;
+}
+
+.container.my-4 .alert {
+    border: 0;
+    border-left: 4px solid currentColor;
+    border-radius: 8px;
+}
+
+.container.my-4 .progress {
+    background: #eaf1f8;
+    border-radius: 999px;
+    height: 9px;
+}
+
+.container.my-4 .progress-bar {
+    border-radius: 999px;
+    background: #5d9ce8;
+}
+
+.container.my-4 .list-group {
+    border-radius: 12px;
+}
+
+.container.my-4 .list-group-item {
+    border-color: #e3ebf4;
+    padding: .85rem 1rem;
+}
+
+.container.my-4 .modal-content {
+    border: 1px solid #e1ebf5 !important;
+    border-radius: 14px;
+}
+
+footer {
+    background: #fff6c9 !important;
+    border-top-color: #f0df88 !important;
+    color: #5d6470;
+}
+
+@media (max-width: 767.98px) {
+    .container.my-4 {
+        margin-top: 1rem !important;
+    }
+
+    .container.my-4 .table-responsive {
+        border: 1px solid #e1eaf3;
+        border-radius: 10px;
+    }
+}

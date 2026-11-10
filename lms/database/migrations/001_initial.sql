@@ -1,0 +1,82 @@
+CREATE TABLE IF NOT EXISTS users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    fullname VARCHAR(200) NOT NULL,
+    email VARCHAR(255) NULL,
+    role ENUM('admin','teacher','student') NOT NULL DEFAULT 'student',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS courses (
+    course_id INT AUTO_INCREMENT PRIMARY KEY,
+    course_code VARCHAR(50) NOT NULL UNIQUE,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NULL,
+    teacher_id INT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (teacher_id) REFERENCES users(user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS course_agreements (
+    student_id INT NOT NULL, course_id INT NOT NULL,
+    agreed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (student_id, course_id),
+    FOREIGN KEY (student_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS units (
+    unit_id INT AUTO_INCREMENT PRIMARY KEY, course_id INT NOT NULL,
+    unit_number INT NOT NULL, title VARCHAR(255) NOT NULL, objectives TEXT NULL, description TEXT NULL,
+    FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE,
+    INDEX (course_id, unit_number)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS unit_topics (
+    topic_id INT AUTO_INCREMENT PRIMARY KEY, unit_id INT NOT NULL,
+    topic_order INT NOT NULL, title VARCHAR(255) NOT NULL, content_type VARCHAR(30) NOT NULL DEFAULT 'text', content TEXT NOT NULL,
+    FOREIGN KEY (unit_id) REFERENCES units(unit_id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS exams (
+    exam_id INT AUTO_INCREMENT PRIMARY KEY, course_id INT NOT NULL,
+    unit_id INT NULL, exam_type VARCHAR(30) NOT NULL, title VARCHAR(255) NOT NULL,
+    pass_percentage DECIMAL(5,2) NOT NULL DEFAULT 70,
+    FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE,
+    FOREIGN KEY (unit_id) REFERENCES units(unit_id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS questions (
+    question_id INT AUTO_INCREMENT PRIMARY KEY, exam_id INT NOT NULL,
+    question_text TEXT NOT NULL, option_a TEXT NOT NULL, option_b TEXT NOT NULL, option_c TEXT NOT NULL, option_d TEXT NOT NULL,
+    correct_option CHAR(1) NOT NULL, FOREIGN KEY (exam_id) REFERENCES exams(exam_id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS exam_results (
+    result_id INT AUTO_INCREMENT PRIMARY KEY, student_id INT NOT NULL, exam_id INT NOT NULL,
+    score INT NOT NULL, total_score INT NOT NULL, passed TINYINT(1) NOT NULL DEFAULT 0, completed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES users(user_id) ON DELETE CASCADE, FOREIGN KEY (exam_id) REFERENCES exams(exam_id) ON DELETE CASCADE,
+    INDEX (student_id, exam_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS student_progress (
+    progress_id INT AUTO_INCREMENT PRIMARY KEY, student_id INT NOT NULL, unit_id INT NOT NULL,
+    step_key VARCHAR(80) NOT NULL, is_completed TINYINT(1) NOT NULL DEFAULT 0, completed_at TIMESTAMP NULL,
+    UNIQUE KEY uq_progress (student_id, unit_id, step_key),
+    FOREIGN KEY (student_id) REFERENCES users(user_id) ON DELETE CASCADE, FOREIGN KEY (unit_id) REFERENCES units(unit_id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS certificates (
+    certificate_id INT AUTO_INCREMENT PRIMARY KEY, student_id INT NOT NULL, course_id INT NOT NULL,
+    cert_code VARCHAR(40) NOT NULL UNIQUE, issued_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, revoked_at TIMESTAMP NULL,
+    UNIQUE KEY uq_certificate (student_id, course_id),
+    FOREIGN KEY (student_id) REFERENCES users(user_id) ON DELETE CASCADE, FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS user_logs (
+    log_id BIGINT AUTO_INCREMENT PRIMARY KEY, user_id INT NULL, event_type VARCHAR(80) NOT NULL,
+    page_url VARCHAR(255) NULL, time_spent INT NULL, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS forum_posts (
+    post_id INT AUTO_INCREMENT PRIMARY KEY, course_id INT NOT NULL, user_id INT NOT NULL,
+    body TEXT NOT NULL, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE, FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS notifications (
+    notification_id INT AUTO_INCREMENT PRIMARY KEY, user_id INT NOT NULL, message VARCHAR(500) NOT NULL,
+    link VARCHAR(255) NULL, is_read TINYINT(1) NOT NULL DEFAULT 0, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

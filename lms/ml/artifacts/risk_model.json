@@ -1,0 +1,19 @@
+{
+  "features": [
+    "days_since_login",
+    "progress_ratio",
+    "average_score",
+    "attempt_count",
+    "content_minutes",
+    "forum_questions"
+  ],
+  "weights": [
+    2.946138317930772,
+    -3.642256578534217,
+    -3.4579155856578425,
+    -1.1325941297806417,
+    -1.068701097500067,
+    -0.06680734325126132
+  ],
+  "bias": -1.4209682963492927
+}
